@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script>
+async function speak() {
+  const res = await fetch("http:/172.16.209.17:5000/alert");
+  const data = await res.json();
+  speechSynthesis.speak(new SpeechSynthesisUtterance(data.message));
+}
+setInterval(speak, 2000);
+</script>
+</body>
+</html>
