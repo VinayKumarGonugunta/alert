@@ -3,7 +3,7 @@
 <body>
 <script>
 async function speak() {
-  const res = await fetch("http:/172.16.209.17:5000/alert");
+  const res = await fetch("https://noncircular-shonta-garbledly.ngrok-free.dev/alert");
   const data = await res.json();
   speechSynthesis.speak(new SpeechSynthesisUtterance(data.message));
 }
