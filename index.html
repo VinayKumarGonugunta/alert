@@ -1,13 +1,23 @@
 <!DOCTYPE html>
 <html>
+<head>
+  <title>Live Alert</title>
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+</head>
 <body>
+
+<h2>Live Alerts</h2>
+
 <script>
-async function speak() {
-  const res = await fetch("https://noncircular-shonta-garbledly.ngrok-free.dev/alert");
-  const data = await res.json();
-  speechSynthesis.speak(new SpeechSynthesisUtterance(data.message));
-}
-setInterval(speak, 2000);
+  const socket = io("https://noncircular-shonta-garbledly.ngrok-free.dev");
+
+  socket.on("alert", (message) => {
+    console.log("Alert:", message);
+    speechSynthesis.speak(
+      new SpeechSynthesisUtterance(message)
+    );
+  });
 </script>
+
 </body>
 </html>
