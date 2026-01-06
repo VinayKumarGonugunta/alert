@@ -1,18 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Live Alert</title>
+  <title>Live Alerts</title>
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    #alert { font-size: 22px; color: red; margin-top: 20px; }
+  </style>
 </head>
 <body>
 
 <h2>Live Alerts</h2>
+<div id="alert">Waiting for alerts...</div>
 
 <script>
   const socket = io("https://noncircular-shonta-garbledly.ngrok-free.dev");
 
   socket.on("alert", (message) => {
-    console.log("Alert:", message);
+    document.getElementById("alert").innerText = message;
+
+    // Speak alert
     speechSynthesis.speak(
       new SpeechSynthesisUtterance(message)
     );
