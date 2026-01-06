@@ -14,17 +14,35 @@
 <div id="alert">Waiting for alerts...</div>
 
 <script>
-  const socket = io("https://noncircular-shonta-garbledly.ngrok-free.dev");
+  const socket = io("https://noncircular-shonta-garbledly.ngrok-free.dev", {
+    transports: ["websocket"]
+  });
+
+  socket.on("connect", () => {
+    console.log("✅ WebSocket connected");
+    document.getElementById("alert").innerText = "Connected to server";
+  });
+
+  socket.on("disconnect", () => {
+    console.log("❌ WebSocket disconnected");
+    document.getElementById("alert").innerText = "Disconnected from server";
+  });
 
   socket.on("alert", (message) => {
+    console.log("📨 Alert received:", message);
     document.getElementById("alert").innerText = message;
 
-    // Speak alert
     speechSynthesis.speak(
       new SpeechSynthesisUtterance(message)
     );
   });
+
+  socket.on("connect_error", (err) => {
+    console.error("⚠️ Connection error:", err);
+    document.getElementById("alert").innerText = "Connection error";
+  });
 </script>
+
 
 </body>
 </html>
