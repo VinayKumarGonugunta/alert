@@ -6,43 +6,54 @@
   <style>
     body { font-family: Arial; padding: 20px; }
     #alert { font-size: 22px; color: red; margin-top: 20px; }
+    button { font-size: 18px; padding: 10px 20px; }
   </style>
 </head>
 <body>
 
 <h2>Live Alerts</h2>
+
+<button id="enableAudio">Enable Audio</button>
+<div id="status">Audio locked (click button)</div>
 <div id="alert">Waiting for alerts...</div>
 
 <script>
+  let audioUnlocked = false;
+
+  document.getElementById("enableAudio").addEventListener("click", () => {
+    audioUnlocked = true;
+
+    // Dummy speech to unlock audio system
+    speechSynthesis.speak(
+      new SpeechSynthesisUtterance("Audio enabled")
+    );
+
+    document.getElementById("status").innerText = "Audio enabled";
+    console.log("🔊 Audio unlocked");
+  });
+
   const socket = io("https://noncircular-shonta-garbledly.ngrok-free.dev", {
     transports: ["websocket"]
   });
 
   socket.on("connect", () => {
     console.log("✅ WebSocket connected");
-    document.getElementById("alert").innerText = "Connected to server";
-  });
-
-  socket.on("disconnect", () => {
-    console.log("❌ WebSocket disconnected");
-    document.getElementById("alert").innerText = "Disconnected from server";
   });
 
   socket.on("alert", (message) => {
     console.log("📨 Alert received:", message);
     document.getElementById("alert").innerText = message;
 
-    speechSynthesis.speak(
-      new SpeechSynthesisUtterance(message)
-    );
-  });
-
-  socket.on("connect_error", (err) => {
-    console.error("⚠️ Connection error:", err);
-    document.getElementById("alert").innerText = "Connection error";
+    if (audioUnlocked) {
+      console.log("🔊 Speaking alert");
+      speechSynthesis.speak(
+        new SpeechSynthesisUtterance(message)
+      );
+    } else {
+      console.log("🔇 Audio blocked (click Enable Audio)");
+    }
   });
 </script>
-
 
 </body>
 </html>
